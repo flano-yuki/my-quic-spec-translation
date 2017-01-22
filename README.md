@@ -9,6 +9,7 @@ IETFに提出されているQUICの仕様について読んだ個人の副産物
 - [draft-iyengar-quic-loss-recovery](https://tools.ietf.org/html/draft-iyengar-quic-loss-recovery-00)
 - [draft-shade-quic-http2-mapping](https://tools.ietf.org/html/draft-shade-quic-http2-mapping-00)
 - [draft-thomson-quic-tls](https://tools.ietf.org/html/draft-thomson-quic-tls-00)
+- [draft-bishop-quic-http-and-qpack](https://tools.ietf.org/html/draft-bishop-quic-http-and-qpack-01)
 
 
 誤訳も多分に含まれるため、原文を参照すること推奨します(SHOULD)。  
