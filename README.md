@@ -5,10 +5,10 @@ QUICの仕様の日本語翻訳
 IETFに提出されているQUICの仕様について読んだ個人の副産物です。  
 完璧な翻訳を与えるものではありませんが、より良いものになるように努めます。  
 - [Charter](https://datatracker.ietf.org/doc/charter-ietf-quic/)
-- [draft-hamilton-quic-transport-protocol](https://tools.ietf.org/html/draft-hamilton-quic-transport-protocol-00)
-- [draft-iyengar-quic-loss-recovery](https://tools.ietf.org/html/draft-iyengar-quic-loss-recovery-00)
-- [draft-shade-quic-http2-mapping](https://tools.ietf.org/html/draft-shade-quic-http2-mapping-00)
-- [draft-thomson-quic-tls](https://tools.ietf.org/html/draft-thomson-quic-tls-00)
+- [draft-ietf-quic-transport](https://tools.ietf.org/html/draft-ietf-quic-transport-02)
+- [draft-ietf-quic-recovery](https://tools.ietf.org/html/draft-ietf-quic-recovery-02)
+- [draft-ietf-quic-http](https://tools.ietf.org/html/draft-ietf-quic-http-02)
+- [draft-ietf-quic-tls](https://tools.ietf.org/html/draft-ietf-quic-tls-02)
 - [draft-bishop-quic-http-and-qpack](https://tools.ietf.org/html/draft-bishop-quic-http-and-qpack-01)
 
 
