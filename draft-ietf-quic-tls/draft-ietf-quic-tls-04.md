@@ -171,3 +171,66 @@ TLS1.2に対しても同様の設計を行うことが出来ます。
    key agreement, authentication and parameter negotiation.  Ordinarily,
    TLS records can also contain _application data_, though in the QUIC
    usage there is no use of TLS application data.
+
+3.  プロトコル概略
+
+QUIC [QUIC-TRANSPORT] は気密性への責任とパケットの保護生後性を仮定します。
+これはTLS1.3コネクションより導入された鍵を使用します。
+また、QUICはTLS1.3の認証とセキュリティと性能に重大なパラメータのネゴシエーション
+に依存します。
+
+厳密に分割されると言うよりは、これら２つのプロトコルは相互に依存します。
+QUICはTLSハンドシェイクを用い、TLSはQUICストリームから提供される信頼性と
+順序付けられた配送を用います。
+
+この文書はどのようにQUICがTLSとやり取りをするかを定義します。
+これはどのようにTLSが使われ、どのように鍵の素材がTLSから提供され、
+またQUICのパケットの保護のために鍵の素材の申請が使われるかの説明を含みます。
+図1は呼び出されるQUICパケット保護と共に基本的なTLSとQUICの間のやりとりを説明します。
+
+
+
+
+
+
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017               [Page 4]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+   +------------+                        +------------+
+   |            |------ Handshake ------>|            |
+   |            |<-- Validate Address ---|            |
+   |            |-- OK/Error/Validate -->|            |
+   |            |<----- Handshake -------|            |
+   |   QUIC     |------ Validate ------->|    TLS     |
+   |            |                        |            |
+   |            |<------ 0-RTT OK -------|            |
+   |            |<------ 1-RTT OK -------|            |
+   |            |<--- Handshake Done ----|            |
+   +------------+                        +------------+
+    |         ^                               ^ |
+    | Protect | Protected                     | |
+    v         | Packet                        | |
+   +------------+                             / /
+   |   QUIC     |                            / /
+   |  Packet    |-------- Get Secret -------' /
+   | Protection |<-------- Secret -----------'
+   +------------+
+
+                    図 1: QUIC と TLS のやり取り
+
+QUICコネクションの初期状態はなんらかの保護の形式なくパケットを交換します。
+この状態においてQUICはstream 0と関連したパケットのの使用に制限されます。
+Stream 0はTLSコネクションのために予約されます。
+これはover TCPとして階層づけられたときに現れる完全なTLSコネクションとされるものです。
+ただ一つの違いは、QUICは信頼性とTCPによって提供されるときと違った順序付けを提供することです。
+
+TLSハンドシェイクの間に対しかな点は鍵の素材はQUICが用いるためにTLSコネクションから提供されることです。
+この鍵の素材はパケット保護鍵の提供のために使われます。
+どのようにまた、いつ鍵が導かれるかの詳細はセクション5に含まれます。
