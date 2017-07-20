@@ -153,3 +153,21 @@ TLS1.3は以前のバージョンに対して、コネクション確立にお�
 TLS1.2に対しても同様の設計を行うことが出来ます。
 ですが、QUICの提供する利点のいくらかは、TLS1.3を用いたハンドシェイクレイテンシー
 を扱うさいにより感じることが出来ます。
+
+2.  表記と用語
+
+   The words "MUST", "MUST NOT", "SHOULD", and "MAY" are used in this
+   document.  It's not shouting; when they are capitalized, they have
+   the special meaning defined in [RFC2119].
+
+   This document uses the terminology established in [QUIC-TRANSPORT].
+
+   For brevity, the acronym TLS is used to refer to TLS 1.3.
+
+   TLS terminology is used when referring to parts of TLS.  Though TLS
+   assumes a continuous stream of octets, it divides that stream into
+   _records_. Most relevant to QUIC are the records that contain TLS
+   _handshake messages_, which are discrete messages that are used for
+   key agreement, authentication and parameter negotiation.  Ordinarily,
+   TLS records can also contain _application data_, though in the QUIC
+   usage there is no use of TLS application data.
