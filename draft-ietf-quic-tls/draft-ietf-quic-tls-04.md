@@ -4,7 +4,7 @@ Intended status: Standards Track                          S. Turner, Ed.
 期限: 2017年12月15日
                                                            2017年6月13日
 
-                    セキュアなQUICのためのTLSの仕様
+                    セキュアなQUICのためのTLSの使用
                          draft-ietf-quic-tls-04
 
 # Abstract
