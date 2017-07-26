@@ -339,3 +339,88 @@ QUICパケットはQUICの機能の方式を用いて保護されます。Sectio
 鍵はTLS Exporterを用いて可能になるTLSコネクションから提供されます。
 ( [I-D.ietf-tls-tls13] の Section 7.5とSection 5.2を参照してください)
 TLSから鍵が提供された後、QUICは自らの鍵の詳細を管理します。
+
+
+# 4.1.  ハンドシェイクと設定手順
+
+TLSハンドシェイクとのQUICの統合は図3で詳細に示されています。
+ストリーム0のQUIC "STREAM" フレームはTLSハンドシェイクを配送します。
+QUICはこのストリームへの損失回復を行いまた、TLSハンドシェイクメッセージが
+正しい順序で配送されることを保証します。
+
+
+
+Thomson & Turner        Expires December 15, 2017               [Page 7]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+       Client                                             Server
+
+   @C QUIC STREAM Frame(s) <0>:
+        ClientHello
+          + QUIC Extension
+                               -------->
+                           0-RTT Key => @0
+
+   @0 QUIC STREAM Frame(s) <any stream>:
+      Replayable QUIC Frames
+                               -------->
+
+                                         QUIC STREAM Frame <0>: @C
+                                                  ServerHello
+                                     {TLS Handshake Messages}
+                               <--------
+                           1-RTT Key => @1
+
+                                              QUIC Frames <any> @1
+                               <--------
+   @C QUIC STREAM Frame(s) <0>:
+        (EndOfEarlyData)
+        {Finished}
+                               -------->
+
+   @1 QUIC Frames <any>        <------->      QUIC Frames <any> @1
+
+                     Figure 3: QUIC over TLS Handshake
+
+   図3において, 記号は以下のように意味します :
+
+   -  "<" と ">" は ストリーム番号を囲います.
+
+   -  "@" はQUICパケットを保護するために使われる鍵を示します。
+   (C = 平文、整合性のために表記します。; 0 = 0-RTT 鍵; 1 = 1-RTT 鍵).
+
+   -  "(" と ")" は TLS 0-RTT ハンドシェイクかアプリケーション鍵で保護されたメッセージを囲います
+
+   -  "{" と "}" は TLSハンドシェイク鍵で保護されたメッセージを囲います
+
+もし0-RTTが未遂なら、クライアントは0-RTT鍵のよって保護されません。
+その場合、クライアントにおける鍵の変化は平文のパケットから1-RTTへ遷移します。
+保護に、TLSハンドシェイクメッセージの最後のパケットが送られる後に起こります。
+
+
+Thomson & Turner        Expires December 15, 2017               [Page 8]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+Note: クライアントはハンドシェイクの間に２つの異なった種類の平文パケットを用います。
+Client Initial パケットはTLS ClientHelloメッセージを運送します。TLSハンドシェイクの残りは
+Client Cleartext パケットに運ばれます。
+
+サーバは保護されないTLSハンドシェイクメッセージ(@C)を送ります。
+ハンドシェイクメッセージの最後が送られた後、
+サーバの遷移は無保護(@C)から完全な 1-RTT 保護(@1) になります。
+
+いくつかのTLSハンドシェイクメッセージはTLSレコード保護によって保護されます。
+これらの鍵はQUICでの使用のためのTLSコネクションから提供されません。
+
+0-RTTデータを送るとき、平文(@C)から0-RTT 鍵(@0)へのクライアント遷移、
+そしてTLSハンドシェイクメッセージの２つめの送信の後に続く1-RTT 鍵(@1)。
+これは1-RTTに保護されたパケットを受信するための保護されないパケットの見込みを
+作ります。
+
+鍵遷移の詳細はSection7.1に含まれます。
+
+
