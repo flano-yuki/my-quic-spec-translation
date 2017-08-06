@@ -492,3 +492,54 @@ Important:
 クライアントは複数のパケットに終了メッセージが運ばれたSTREAMフレームの複製が送られること
 が暗示するhead-of-line blockingの可能性を避けることが出来ます。
 これはサーバがこれらのパケットへのただちに行うことをできるようにします。
+
+# 4.2.2.  ソースアドレス検証
+
+TLS ClientHelloの処理の間、TLSは転送がクライアントからソースアドレス検証を要求するかどうか
+決めることを要求します。
+
+セッションを再開する初期TLS ClientHello はセッションチケットに
+アドレス検証トークンを含みます。
+これを0-RTT におけるすべての試行を含みます。
+   During the processing of the TLS ClientHello, TLS requests that the
+   transport make a decision about whether to request source address
+   validation from the client.
+
+   An initial TLS ClientHello that resumes a session includes an address
+   validation token in the session ticket; this includes all attempts at
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 10]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+もしクライアントがセッション再開を試みないなら、
+トークンは存在しません。初期ClientHelloの処理の間、
+TLSはQUICに存在するなんらかのトークンを提供します。
+レスポンスにおいて、QUICはみっつのレスポンスから一つを返します。
+
+- コネクションの処理
+- クライアントアドレス検証への応答
+- コネクションの中断
+
+
+もしQUICがソースアドレス検証を要求するなら、
+それもまた新たなソースアドレス検証トークンを提供します。
+TLSはTLS HelloRetryRequest メッセージのクッキー拡張の要求されたなんらかの情報を含みます。
+その他の場合、コネクションは処理するかもしくはハンドシェイクエラーとともに中断します。
+
+
+クライアントは２つめのClientHelloの中のクッキー拡張に応答します。
+有効なクッキー拡張を含むClientHello は常にHelloRetryRequestへのレスポンスが存在します。
+もしアドレス検証がQUICから要求されたなら、これはアドレス検証トークンを含むでしょう。
+TLSはQUICの二回目のアドレス検証リクエスト - クッキー拡張から展開された値を含みます -を作ります。
+このリクエストに対するレスポンスにおいて、QUICはクライアントアドレス検証に応答できません。
+それは中断かコネクション試行の進行を許可することのみができます。
+
+QUICはハンドシェイクが完了したあといつでもセッション再送のために使われる新たな
+アドレス検証トークンを提供できます。
+新たなトークンが提供されたときはいつでも、
+TLSがNewSessionTicketメッセージが生成した、チケットの中に含まれたトークンが提供されます。
+
+クライアントアドレス検証の詳細はSection 8を見てください。
