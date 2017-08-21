@@ -585,3 +585,41 @@ TLSサーバは0-RTT 鍵が使用できることを通知するかもしれま�
 含まれます。
 
 
+# 4.2.5.  TLS インタフェース概略
+
+図4はクライアントとサーバの両方に対して
+QUICとTLSの間の交換を要約します。
+
+   Client                                                    Server
+
+   Get Handshake
+   0-RTT Key Ready
+                         --- send/receive --->
+                                                 Handshake Received
+                                                    0-RTT Key Ready
+                                                      Get Handshake
+                                                   1-RTT Keys Ready
+                        <--- send/receive ---
+   Handshake Received
+   Get Handshake
+   Handshake Complete
+   1-RTT Keys Ready
+                         --- send/receive --->
+                                                 Handshake Received
+                                                      Get Handshake
+                                                 Handshake Complete
+                        <--- send/receive ---
+   Handshake Received
+   Get Handshake
+
+            図4: QUICとTLSの間の相互関係の概要
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 12]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
