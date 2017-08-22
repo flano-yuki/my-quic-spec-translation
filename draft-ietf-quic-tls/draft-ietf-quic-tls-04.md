@@ -689,3 +689,14 @@ Internet-Draft                QUIC over TLS                    June 2017
   ([I-D.ietf-tls-tls13] の 4.6.2章を参照してください)
 
 
+# 4.6.  TLS エラー
+
+  TLSコネクション時のエラーはstream 0のTLSアラートを用いて通知されるべきです(SHOULD)
+  ハンドシェイクにおける失敗はTLS_HANDSHAKE_FAILED失敗の
+  QUIC コネクションエラー として扱われるべきです(SHOULD)
+  一度ハンドシェイクが完了したら、
+  TLSアラートの送受信が起こったTLSコネクションにおけるエラーは
+  TLS_FATAL_ALERT_GENERATEDもしくはTLS_FATAL_ALERT_RECEIVEDタイプの
+  QUIC コネクションエラーとして扱われるべきです(MUST)
+   respectively.
+
