@@ -712,3 +712,34 @@ Internet-Draft                QUIC over TLS                    June 2017
   の両方と共に残念ながら保護されます。
   このメッセージは制限されるため、追加のオーバヘッドは小さいです。
 
+# 5.1.  新しい鍵の入手
+
+TLSがキーマテリアルの可用性の通知によって、
+パケット保護鍵と初期化ベクター(IV)は更新されます。(5.2章を参照してください)
+AEAD関数の選択もまたTLSにより交渉された適切なAEADのために更新されます。
+
+任意の保護されないハンドシェイクパケット以外のパケット(7.1章を参照)のために
+一度鍵の交換が行われたなら、
+より大きなパケットナンバーを伴うパケットでは新たなキーマテリアルによって
+送信されなくてはいけません(MUST)。
+
+新しい鍵が導入されるたびにそれらのパケットのKEY_PHASEビットは、
+新たな鍵の複製の使用を通知するために反転されます。
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 14]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+新たなパケットにおいて、エンドポイントはストリームデータを再送します。
+新たなパケットは新たしいパケットナンバーをもち、また最新の
+パケット保護鍵を用います。
+この単純化された鍵管理は鍵が更新されたときのものです。
+
+   An endpoint retransmits stream data in a new packet.  New packets
+   have new packet numbers and use the latest packet protection keys.
+   This simplifies key management when there are key updates (see
+   Section 7.2).
+
