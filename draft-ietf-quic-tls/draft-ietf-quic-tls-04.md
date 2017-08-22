@@ -743,3 +743,14 @@ Internet-Draft                QUIC over TLS                    June 2017
    This simplifies key management when there are key updates (see
    Section 7.2).
 
+# 5.2.  QUIC 鍵拡張
+
+QUICはそのシステムが使うTLSにおいて構造化されたパケット保護秘密鍵、鍵そしてIVの
+システムを用います。
+QUICがその鍵管理にの基本として用いる秘密鍵はTLSエクスポーターによって
+得られます。
+
+QUICは鍵導出のためにTLSが交渉したのと同様のハッシュ関数とともにHKDFを用います。
+たとえば、もしTLSがTLS_AES_128_GCM_SHA256を用いるならば、
+SHA-256ハッシュ関数が用いられます。
+
