@@ -754,3 +754,21 @@ QUICは鍵導出のためにTLSが交渉したのと同様のハッシュ関数�
 たとえば、もしTLSがTLS_AES_128_GCM_SHA256を用いるならば、
 SHA-256ハッシュ関数が用いられます。
 
+# 5.2.1.  0-RTT 秘密鍵
+
+0-RTT 鍵はTLSハンドシェイクの完了というよりコネクションの再開に使われる鍵です。
+0-RTT回gを用いて送られるデータは再生されるかもしれません、
+またその仕様に置いていくつかの制約があります、9.2章を見てください。
+0-RTT鍵はClientHelloの送受信ののちに使われます。
+
+暗号鍵はエクスポーターラベル "EXPORTER-QUIC 0-RTT Secret"と空のコンテクスト
+を使うTLSから提供されます。
+暗号鍵のサイズはTLSに交渉されたPRFハッシュ関数のためのハッシュの出力サイズ
+でなくてはいけません（MUST)
+これはTLS early_exporter_secretを用います。
+QUIC 0-RTT 暗号鍵はクライアントから送られるパケットの保護のためだけに使われます。
+
+      client_0rtt_secret
+          = TLS-Exporter("EXPORTER-QUIC 0-RTT Secret"
+                         "", Hash.length)
+
