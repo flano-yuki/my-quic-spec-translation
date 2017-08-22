@@ -877,3 +877,47 @@ TLSステートマシーンはClientHelloが送られることを報告したと
 TLSステートマシーンはハンドシェイクの完了を報告したとき、
 1-RTT鍵は書き込みのために生成され入手されます。
 
+# 5.3.  QUIC AEAD 仕様
+
+   The Authentication Encryption with Associated Data (AEAD) [RFC5116]
+   関数はTLSコネクションにおける使用のために交渉されたAEADがQUICパケット保護の
+   ために用いられます。
+   たとえば、もしTLSがTLS_AES_128_GCM_SHA256を用いているのなら、
+   AEAD_AES_128_GCM関数が用いられます。
+
+正規のQUICパケットはAEADアルゴリズム[RFC5116]によって保護されます。
+Version negotiationとpublic resetは保護されません。
+
+一度TLSが鍵を提供したなら、
+正規のQUICパケットのコンテンツは任意のTLSメッセージが送られた後直ちに
+TLSによって選ばれたAEADによって保護されます。
+
+鍵Kはクライアントパケット保護鍵(client_pp_key_n)また
+サーバパケット保護鍵(server_pp_key_n)のどちらかです。
+5.2症の定義に由来します。
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 17]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+ナンスNはパケット保護IV(client_pp_iv_nかserver_pp_iv_nのどちらか)と
+パケットナンバーの結合によって構成されます。
+ネットワークバイトオーダーに再構築されたQUICパケットナンバーの64ビットは
+IVのサイズの左をゼロで埋められています。
+埋められたパケットなんばーとIVの排他的論理和が
+AEADナンスを構築します。
+
+
+関連するデータAは、AEADにおけるQUICヘッダーのコンテンツ,は
+汎用ヘッダーのフラグオクテットから始まります。
+
+入力の平文PはAEADにおけるパケットナンバーから始まる
+QUICフレームです。[QUIC-TRANSPORT]において説明されるように。
+
+出力の暗号文Cは、AEADのPに代わって転送されるものです。
+
+TLSが鍵を提供する前はレコード保護なしで振る舞い平文Pが修正なく転送されます。
+
