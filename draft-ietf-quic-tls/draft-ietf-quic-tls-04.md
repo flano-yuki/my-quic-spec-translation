@@ -772,3 +772,83 @@ QUIC 0-RTT 暗号鍵はクライアントから送られるパケットの保護
           = TLS-Exporter("EXPORTER-QUIC 0-RTT Secret"
                          "", Hash.length)
 
+# 5.2.2.  1-RTT 暗号鍵
+
+1-RTT鍵はTLSハンドシェイクが完了したあとクライアントとサーバの両方で使われます。
+これらの２つの鍵はいつでも使われます。
+ひとつはクライアントから送られうパケットのパケット保護鍵の導出のために使われ、
+もうひとつはサーバが送られるパケットにおいてパケット保護鍵のためです。
+
+初期化クライアントパケット保護鍵は
+エクスポーターラベル "EXPORTER-QUIC client 1-RTT Secret"を用いた
+TLSから提供されます。
+初期化サーバパケット保護鍵はエクスポーターラベル "EXPORTER-QUIC server  1-RTT Secret"
+を用います。
+両方のエクスポーターは空のコンテクストを用います。
+暗号鍵のサイズはTLSにより交渉されたPRFハッシュ関数のためにハッシュ出力のサイズでなければいけません(MUST)
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 15]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+      client_pp_secret_0
+          = TLS-Exporter("EXPORTER-QUIC client 1-RTT Secret"
+                         "", Hash.length)
+      server_pp_secret_0
+          = TLS-Exporter("EXPORTER-QUIC server 1-RTT Secret"
+                         "", Hash.length)
+
+これらの秘密鍵は初期化クライアントとサーバパケット保護鍵の導出に用いられます。
+鍵更新ののち、これらの秘密鍵は[I-D.ietf-tls-tls13] の7.1章によって定義されるHKDF-Exp-Label 関数
+を用いて更新されます。
+HKDF-Expand-LabelはTLSにより交渉されたPRFハッシュ関数を用います。
+秘密鍵の置換は クライアントには"QUIC Client 1-RTT Secret"のラベルの
+サーバには"QUIC Server 1-RTT Secret"のラベル、
+空のHashValue、そしてそのPRFのためにTLSが選択したハッシュ関数と
+同じ出力の長さの現在の秘密鍵
+を用いて導かれます。
+
+
+      client_pp_secret_<N+1>
+          = HKDF-Expand-Label(client_pp_secret_<N>,
+                              "QUIC client 1-RTT Secret",
+                              "", Hash.length)
+      server_pp_secret_<N+1>
+          = HKDF-Expand-Label(server_pp_secret_<N>,
+                              "QUIC server 1-RTT Secret",
+                              "", Hash.length)
+
+これは必要に応じて作られた新しい秘密鍵の継承を許可します。
+   This allows for a succession of new secrets to be created as needed.
+
+HKDF-Expand-Labelは以下のように特別にフォーマットされたパラメータとともに
+HKDF-Expand [RFC5869] を用います。
+
+       HKDF-Expand-Label(Secret, Label, HashValue, Length) =
+            HKDF-Expand(Secret, HkdfLabel, Length)
+
+       Where HkdfLabel is specified as:
+
+       struct {
+           uint16 length = Length;
+           opaque label<10..255> = "TLS 1.3, " + Label;
+           uint8 hashLength;     // Always 0
+       } HkdfLabel;
+
+例として、クライアントパケット保護秘密鍵がパラメータを使用するには
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 16]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+      info = (HashLen / 256) || (HashLen % 256) || 0x21 ||
+             "TLS 1.3, QUIC client 1-RTT secret" || 0x00
+
