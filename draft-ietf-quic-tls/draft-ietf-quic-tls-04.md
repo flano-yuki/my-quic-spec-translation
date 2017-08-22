@@ -852,3 +852,28 @@ Internet-Draft                QUIC over TLS                    June 2017
       info = (HashLen / 256) || (HashLen % 256) || 0x21 ||
              "TLS 1.3, QUIC client 1-RTT secret" || 0x00
 
+# 5.2.3.  パケット保護鍵とIV
+
+完全な鍵拡張は[I-D.ietf-tls-tls13]の7.3章に定義されるような鍵拡張のために
+同様の処理を用い、入力された秘密鍵に対して異なる値を用います。
+QUICはTLSに交渉されたAEAD関数を用います。
+
+クライアントから送られる0-RTTパケット保護のために用いられたパケット保護鍵とIVは
+QUIC 0-RTT秘密鍵から導出されます。
+クライアントとサーバから送られた1-RTTパケットはパケット保護鍵とIVは
+QUIC 0-RTT 秘密鍵は各々client_pp_secretとserver_pp_secretの現在の生成
+から導出されます。
+出力の長さはTLSに選ばれたAEAD関数の要件によって決定されます。
+鍵の長さはAEAD鍵長です。
+任意のsecret Sに対して、以下のように導出された鍵とIVは対応します。
+
+
+      key = HKDF-Expand-Label(S, "key", "", key_length)
+      iv  = HKDF-Expand-Label(S, "iv", "", iv_length)
+
+QUICレコード保護は最初キーマテリアルなしで開始します。
+TLSステートマシーンはClientHelloが送られることを報告したとき、
+0-RTT鍵は書き込みのために生成し入手されます。
+TLSステートマシーンはハンドシェイクの完了を報告したとき、
+1-RTT鍵は書き込みのために生成され入手されます。
+
