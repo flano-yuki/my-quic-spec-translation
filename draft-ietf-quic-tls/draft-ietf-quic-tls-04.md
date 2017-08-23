@@ -983,3 +983,66 @@ Internet-Draft                QUIC over TLS                    June 2017
              = TLS-Exporter("EXPORTER-QUIC Packet Number Secret"
                             "", Hash.length)
 
+# 6.  保護されないパケット
+
+QUICはすべての保護されないパケットに対して完全性検証を加えます。
+交渉されたAEADによって保護されない任意のパケットは、
+完全性検証を含みます。
+この確認は通告からパケットを妨げません。
+
+   This check does not prevent the packet
+   from being altered, it exists for added resilience against data
+   corruption and to provided added assurance that the sender intends to
+   use QUIC.
+
+保護されないパケットはすべてバージョンナンバーなどを含む
+QUIC ヘッダの長い形式を用います。
+QUICのこのバージョンに血合いs手、
+完全性検証は64bit FNV-1a ハッシュ(6.2章参照)を用います。
+このハッシュの出力はパケットのペイロードに対して拡張されます。
+
+完全性検証アルゴリズムはプロトコルの他のバージョンで変更しても良いです(MAY)。
+
+# 6.1.  完全性検証手続き
+
+エンドポイントはロングヘッダーを持つパケットと
+保護されないであろうことを示すタイプ（0-RTT Encrypted (0x05),
+1-RTT Encrypted (key phase 0) (0x06), もしくは 1-RTT Encrypted (key phase 1) (0x07))
+が最初の完全性検証なしで送られるパケットを構築します。
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 19]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+送信者はそれからタイプフィールドから始まる与えられたパケットの
+完全性検査を計算します。
+そのハッシュの出力はパケットに追加されます。
+
+最初の保護されないパケットを受け取る受信者はバージョンが正しいことを確認します。
+それから、末尾8オクテットを削除します。
+それはパケットの残りに他対して完全性検査を計算します。
+有効な完全性検査を含まない保護されないパケットは廃棄されなければなりません(MUST)
+
+# 6.2.  The 64-bit FNV-1a アルゴリズム
+
+QUICは変種のFowler/Noll/Vo ハッシュ(FNV-1a) [FNV]の64bit版を用います。
+
+   FNV-1a can be expressed in pseudocode as:
+
+   "hash := offset basis for each input octet: hash := hash XOR input
+   octet hash := hash * prime "
+
+これは、offset basisに寄って64bit符号なし整数が初期化されます。
+また入力のそれぞれのオクテットは排他的二進数論理和が取られ、
+素数によって乗算されます。
+操作のオーバーフローは廃棄されます。
+
+64bit FNV-1aに対するoffset basisが14695981039346656037 (十二進数 0xcbf29ce484222325) とし、
+素数は1099511628211 (十二進数 0x100000001b3 または 2^40 + 2^8 + 0xb3)
+
+一度すべてのオクテットがこのやり方で処理されたなら、
+ネットワークバイトオーダにおいて最後の整数値は8オクテットとして
+符号化されます。
+
