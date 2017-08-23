@@ -973,3 +973,13 @@ Internet-Draft                QUIC over TLS                    June 2017
    packet number encoding used in QUIC can cause packet numbers to be
    decoded incorrectly if they are delayed significantly.
 
+# 5.6.  パケットナンバーギャップ
+
+[QUIC-TRANSPORT] 7.5.1.1章もまたConnection ID転送において
+パケットナンバーギャップを計算するために秘密鍵を要求します。
+秘密鍵はこのように計算されます。
+
+         packet_number_secret
+             = TLS-Exporter("EXPORTER-QUIC Packet Number Secret"
+                            "", Hash.length)
+
