@@ -955,3 +955,21 @@ Thomson & Turner        Expires December 15, 2017              [Page 18]
 Internet-Draft                QUIC over TLS                    June 2017
 
 
+5.5.  保護されたパケットの受理
+
+いちど与えれたパケットナンバーとともにパケットの受信にエンドポイントが
+成功したなら、
+それはもしそれらが同じ鍵か(もし鍵更新がなされていたなら)
+次のパケット保護鍵による十分な保護がされていないなら
+類似して、
+鍵更新の発生を表すパケットが十分に保護されていないものは
+廃棄しなくてはならない(MUST)
+
+パケットが保護されてないことへの失敗は攻撃かもしれないピアーに
+プロトコルエラーの存在を示す必要は必ずしもありません。
+
+   Failure to unprotect a packet does not necessarily indicate the
+   existence of a protocol error in a peer or an attack.  The truncated
+   packet number encoding used in QUIC can cause packet numbers to be
+   decoded incorrectly if they are delayed significantly.
+
