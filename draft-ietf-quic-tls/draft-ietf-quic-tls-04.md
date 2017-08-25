@@ -1705,3 +1705,236 @@ QUICパケット保護はパディングに対していかなる割当も含み�
 実装は冗長なパケットを辿り、攻撃の誘導として
 生産的でないパケットの過大な塊を扱います。
 
+12.  Error codes
+
+暗号ハンドシェイクに割り当てられているQUICエラーコードの部分空間は
+0xC0000000-0xFFFFFFFFです。
+以下のエラーはTLSが暗号化ハンドシェイクに用いられるときに定義されます。
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 33]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+   TLS_HANDSHAKE_FAILED (0xC000001C):  The TLS handshake failed.
+
+   TLS_FATAL_ALERT_GENERATED (0xC000001D):  A TLS fatal alert was sent,
+      causing the TLS connection to end prematurely.
+
+   TLS_FATAL_ALERT_RECEIVED (0xC000001E):  A TLS fatal alert was
+      received, causing the TLS connection to end prematurely.
+
+# 13.  IANA Considerations
+
+   This document does not create any new IANA registries, but it does
+   utilize the following registries:
+
+   o  QUIC Transport Parameter Registry - IANA is to register the three
+      values found in Section 12.
+
+   o  TLS ExtensionsType Registry - IANA is to register the
+      quic_transport_parameters extension found in Section 10.2.
+      Assigning 26 to the extension would be greatly appreciated.  The
+      Recommended column is to be marked Yes.
+
+   o  TLS Exporter Label Registry - IANA is requested to register
+      "EXPORTER-QUIC 0-RTT Secret" from Section 5.2.1; "EXPORTER-QUIC
+      client 1-RTT Secret" and "EXPORTER-QUIC server 1-RTT Secret" from
+      Section 5.2.2; "EXPORTER-QUIC Packet Number Secret" Section 5.6.
+      The DTLS column is to be marked No.  The Recommended column is to
+      be marked Yes.
+
+# 14.  References
+
+# 14.1.  Normative References
+
+   [I-D.ietf-tls-tls13]
+              Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", draft-ietf-tls-tls13-20 (work in progress),
+              April 2017.
+
+   [QUIC-TRANSPORT]
+              Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", draft-ietf-quic-
+              transport (work in progress), June 2017.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 34]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+   [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
+              Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
+              <http://www.rfc-editor.org/info/rfc5116>.
+
+   [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
+              Key Derivation Function (HKDF)", RFC 5869,
+              DOI 10.17487/RFC5869, May 2010,
+              <http://www.rfc-editor.org/info/rfc5869>.
+
+   [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
+              "Transport Layer Security (TLS) Application-Layer Protocol
+              Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
+              July 2014, <http://www.rfc-editor.org/info/rfc7301>.
+
+# 14.2.  Informative References
+
+   [AEBounds]
+              Luykx, A. and K. Paterson, "Limits on Authenticated
+              Encryption Use in TLS", March 2016,
+              <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
+
+   [FNV]      Fowler, G., Noll, L., Vo, K., Eastlake, D., and T. Hansen,
+              "The FNV Non-Cryptographic Hash Algorithm", draft-
+              eastlake-fnv-13 (work in progress), June 2017.
+
+   [QUIC-HTTP]
+              Bishop, M., Ed., "Hypertext Transfer Protocol (HTTP) over
+              QUIC", draft-ietf-quic-http (work in progress), June 2017.
+
+   [QUIC-RECOVERY]
+              Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
+              and Congestion Control", draft-ietf-quic-recovery (work in
+              progress), June 2017.
+
+   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818,
+              DOI 10.17487/RFC2818, May 2000,
+              <http://www.rfc-editor.org/info/rfc2818>.
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <http://www.rfc-editor.org/info/rfc5280>.
+
+   [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
+              (TLS) Cached Information Extension", RFC 7924,
+              DOI 10.17487/RFC7924, July 2016,
+              <http://www.rfc-editor.org/info/rfc7924>.
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 35]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+Appendix A.  Contributors
+
+   Ryan Hamilton was originally an author of this specification.
+
+Appendix B.  Acknowledgments
+
+   This document has benefited from input from Dragana Damjanovic,
+   Christian Huitema, Jana Iyengar, Adam Langley, Roberto Peon, Eric
+   Rescorla, Ian Swett, and many others.
+
+Appendix C.  Change Log
+
+      *RFC Editor's Note:* Please remove this section prior to
+      publication of a final version of this document.
+
+   Issue and pull request numbers are listed with a leading octothorp.
+
+C.1.  Since draft-ietf-quic-tls-02
+
+   o  Updates to match changes in transport draft
+
+C.2.  Since draft-ietf-quic-tls-01
+
+   o  Use TLS alerts to signal TLS errors (#272, #374)
+
+   o  Require ClientHello to fit in a single packet (#338)
+
+   o  The second client handshake flight is now sent in the clear (#262,
+      #337)
+
+   o  The QUIC header is included as AEAD Associated Data (#226, #243,
+      #302)
+
+   o  Add interface necessary for client address validation (#275)
+
+   o  Define peer authentication (#140)
+
+   o  Require at least TLS 1.3 (#138)
+
+   o  Define transport parameters as a TLS extension (#122)
+
+   o  Define handling for protected packets before the handshake
+      completes (#39)
+
+   o  Decouple QUIC version and ALPN (#12)
+
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 36]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+C.3.  Since draft-ietf-quic-tls-00
+
+   o  Changed bit used to signal key phase
+
+   o  Updated key phase markings during the handshake
+
+   o  Added TLS interface requirements section
+
+   o  Moved to use of TLS exporters for key derivation
+
+   o  Moved TLS error code definitions into this document
+
+C.4.  Since draft-thomson-quic-tls-01
+
+   o  Adopted as base for draft-ietf-quic-tls
+
+   o  Updated authors/editors list
+
+   o  Added status note
+
+Authors' Addresses
+
+   Martin Thomson (editor)
+   Mozilla
+
+   Email: martin.thomson@gmail.com
+
+
+   Sean Turner (editor)
+   sn3rd
+
+   Email: sean@sn3rd.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 37]
