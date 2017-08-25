@@ -1574,9 +1574,86 @@ TLS Finishedメッセージの受信と検証はTLS ハンドシェイクの完�
 
 # 10.  QUIC-Specific Additions to the TLS Handshake
 
-   QUIC uses the TLS handshake for more than just negotiation of
-   cryptographic parameters.  The TLS handshake validates protocol
-   version selection, provides preliminary values for QUIC transport
-   parameters, and allows a server to perform return routeability checks
-   on clients.
+QUICはただの暗号的なパラメータの交渉以上にTLSハンドシェイクを用います。
+TLSハンドシェイクはプロトコルバージョンの選択、QUICトランスポートパラメータ
+の主だった値の提供そしてサーバがクライアントのルーティング可能性を返す振る舞いを
+許可することを有効にします。
+
+# 10.1.  Protocol and Version Negotiation
+
+QUICバージョンネゴシエーションメカニズムはハンドシェイクの完了の前に
+使われるQUICのバージョンの交渉に使われます。
+しかいしながら、このパケットは認証されず、能動的な攻撃者が
+バージョンダウングレードを強制する可能性を与えます。
+
+攻撃者によってQUICバージョンダウングレードが強制されないことを保証するために、
+バージョン情報はQUICネゴシエーションの完全性保護を提供するTLSハンドシェイクの中に複製されます。
+これはハンドシェイクの完了の前のバージョンダウングレードを妨げません。
+ゆえにこれはダウングレードはハンドシェイクの失敗を起こすことを意味します。
+
+TLSはApplication Layer Protocol Negotiation (ALPN) [RFC7301]を
+アプリケーションプロトコルを選択することに使います。
+アプリケーションレイヤープロトコルは操作できるQUICバージョンらを制限します。
+サーバはクライアントが選んだQUICバージョンに互換性のある
+アプリケーションプロトコルを選ばなくてはいけません(MUST)
+
+もしサーバが互換性のあるアプリケーションプロトコルとQUICバージョンの
+結合を選べなかったら、
+それはコネクションを中断しなければいけません(MUST)。
+もしサーバがQUICバージョンとALPN識別子の互換性のない結合を
+選択したならクライアントはコネクションを中断しても良いです(MAY)
+
+# 10.2.  QUIC Transport Parameters Extension
+
+QUICトランスポートパラメータはTLS拡張に持ち込まれます。
+QUICの異なるバージョンはこの構造体に対して異なる形式を
+定義するかもしれません
+
+
+TLSハンドシェイクにおいけトランスポートパラメータが含まれることは
+これらの値に完全性保護を提供します。
+
+      enum {
+         quic_transport_parameters(26), (65535)
+      } ExtensionType;
+
+
+quic_transport_parameters拡張の"extension_data"フィールドは
+使われるQUICのバージョンにょって定義された値を含みます。
+[QUIC-TRANSPORT]に定義されているものが使われるとき、
+quic_transport_parameters拡張はTransportParametersに持ち込まれます。
+
+
+quic_transport_parameters拡張はハンドシェイクの間ClientHelloとEncryptedExtensionsメッセージ
+に同封されます。
+拡張はNewSessionTicketメッセージに含まれていても良いです(MAY)
+
+
+# 10.3.  Priming 0-RTT
+
+  QUICはTLSを修正なく用います、故にTCP上で確立されたTLSハンドシェイクにおける
+  pre-shared鍵をQUIC上で0-RTTを有効に出来る可能性があります。
+  同様に、QUICはTCPにおいて0-RTTを有効にするpre-shared鍵を提供できます。
+
+  ALPNラベルの例外など0-RTTの使用を適応するにあたってのすべての制約は
+  明確に互換性のあるラベルによってのみ変更しなければなりません(MUST)
+  クライアントはどこでALPN拡張で最初のAPLNラベルのせってによってALPNラベルが
+  選ばれたかを示します。
+
+サーバが使う証明書は異なるプロトコル・スタックと異なるポート番号を使う
+両方のコネクションによって有効だと考えられなければなりません(MUST)
+たとえば HTTP/1.1 とHTTP/2は異なるポート番号を用います。
+たとえば HTTP/1.1　と HTTP/2はTLSとTCP上で動作する一方
+QUICはUDP上で動作します。
+
+
+ソースアドレス検証は異なるプロトコル・スタック間で完全に
+可搬ではありません。
+ソースIPアドレスが定数で保持されていたとしても、
+ポート番号は異なる可能性が高いです。
+パケット反射攻撃はこの状況いまだ可能です。
+ゆえにこの攻撃を始めるホストの集合大幅に短縮されます。
+サーバはそのようなコネクションに対するソースアドレス検証を
+避けるかもしれません。また、ソースアドレス検証なくクライアントに対して送られるデータ
+の良を増やすことを許可するかもしれません。
 
