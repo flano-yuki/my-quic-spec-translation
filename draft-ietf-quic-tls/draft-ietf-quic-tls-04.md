@@ -1280,3 +1280,135 @@ Internet-Draft                QUIC over TLS                    June 2017
 中断しなくてはいけません(MUST)
 
 
+# 8.  クライアントアドレス検証
+
+TLSによって提供されたサーバにおけるクライアントソースアドレスの検証を
+有効にする２つの道具は、HelloRetryRequestメッセージにおけるクッキー
+とNewSessionTicketにおけるチケットです。
+
+# 8.1.  HelloRetryRequest アドレス検証
+
+TLS HelloRetryRequestメッセージにおけるクッキー拡張は
+ハンドシェイクの間のソースアドレス検証として振る舞うことをサーバに許可します。
+
+
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 24]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+QUICは最初のClientHelloの処理の間にアドレス検証を要求するとき、
+それが提供したトークンはHelloRetryRequestのクッキー拡張に含まれます。
+出来る限りクッキーはクライアントによって推測されることはできません。
+サーバはもし二番目のClientHelloに値を含むならクライアントはHelloRetryRequestを
+受け取ることを保証されることが出来ます。
+
+初期のClientHelloはクッキーは拡張を含みません。
+それはもしサーバが再構築状態に必要なすべての情報を含むクッキーを構築したなら、
+それはHelloRetryRequestの送信の後、ローカルの状態を廃棄できます。
+ClientHelloにおける有効なクッキーの存在はClientHelloのクライアントからの
+二度目の要求の試行を示します。
+
+アドレス検証トークンは２つめのClientHelloから展開され、
+また将来の検証のために転送に渡されることがあります。
+もし有効が失敗したなら、サーバはTLSハンドシェイクに失敗し、illegal_parameterアラートを
+送らなければなりません(MUST)
+
+HelloRetryRequestの他の使用とアドレス検証の結合は
+追加のラウンドトリップがハンドシェイクに加えられるいくつかの方法を
+確保します。
+特に、これは異なるクライアント鍵共有への要求とアドレス検証の要求の結合を
+可能にします。
+
+もしTLSが他の理由でHelloRetryRequestを送信する必要があるなら、
+それはHelloRetryRequestが生成された理由を確かに識別することを保証します。
+二番目のClientHelloの処理の間、もしアドレス検証がもともと要求されていないなら、
+TLSはアドレス検証に対するトランスポートプロトコルの調査を必要としません。
+そのような場合、不在かアドレス検証トークンを使用できるクッキー拡張は現れません。
+
+# 8.1.1.  Stateless アドレス検証
+
+コネクションを継続するためのすべての状態必要性の備えのために
+サーバはクッキー拡張を用いることが出来ます。
+これはサーバに有効ではないソースアドレスを持つクライアントに対して
+状態を委託することを避けることを可能にします。
+
+たとえば、サーバは要求された情報を暗号化するために静的に設定された鍵を
+使用することが出来、またクッキーに情報を含むことが出来ます。
+アドレス検証情報に加えて、暗号化を用いるサーバはClientHelloとその長さのハッシュを
+復元できる必要もまたあります。加えて、任意の情報はHelloRetryRequestの
+再構築のために必要です。
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 25]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+# 8.1.2.   HelloRetryRequestの送信
+
+HelloRetryRequestメッセージの送信をするとき
+サーバはコネクションに対して状態を保持する必要はありません。
+これはサーバに対してサービスの露出を拒否することをさけるために
+必要かもしれません。
+しかしながら、これはサーバに置いて転送が損失することに対する情報を
+意味します。
+これはstream 0のストリームオフセット、サーバが選んだパケットナンバー
+ラウンドトリップタイムを計測する任意の機会を含みます。
+
+サーバはServer Stateless RetryパケットにおけるTLS HelloRetryRequestを
+送らなければいけません(MUST)
+Server Stateless Retryパケットの使用はクライアントにおけるストリームオフセットのリセットを起こします。
+
+   A server MUST send a TLS HelloRetryRequest in a Server Stateless
+   Retry packet.  Using a Server Stateless Retry packet causes the
+   client to reset stream offsets.  It also avoids the need for the
+   server select an initial packet number, which would need to be
+   remembered so that subsequent packets could be correctly numbered.
+
+   A HelloRetryRequest message MUST NOT be split between multiple Server
+   Stateless Retry packets.  This means that HelloRetryRequest is
+   subject to the same size constraints as a ClientHello (see
+   Section 4.4).
+
+# 8.2.  NewSessionTicket アドレス検証
+
+TLS NewSessionTicketメッセージにおけるチケットは
+サーバがクライアントに対しチケットに近い集合を提供する事を許可します。
+0-RTTが試みられているかに関わらず、クライアントがコネクションを消費する時、
+それはハンドシェイクメッセージにチケットを含みます。
+HelloRetryRequest クッキーを伴うなら、
+サーバはチケットにアドレス検証トークンを含みます。
+それがソースアドレストークンを必要とされるかを問う時、
+TLSはセッションチケットから展開したトークンを転送に提供します。
+
+もしHelloRetryRequestクッキーとするセッションチケットの両方がClientHelloに存在するなら、
+クッキーから渡されたトークンはただ転送に渡されるのみです。
+二つ目ClientHelloを示すクッキーの存在、セッションチケットからのトークンは、それが最初のClientHello に現れる時転送に提供されるでしょう。
+
+さーbはいかなる時でもNewSessionTicket を送ることができます。
+これは状態、そしてアドレス検証トークンの更新を許可します。
+これはチケットやトークンの刷新が行われるかもしれなかったり、
+コネクションの状態の変更がレスポンスにおいて生成されるかもしれません。
+QUICは新しいアドレス検証トークンが提供されたことにより送られたNewSessionTicket を要求することができます。
+
+0-RTTをサポートするつもりのサーバはTLSハンドシェイクが完了したのち直ちに
+アドレス検証トークンを提供するべきです(SHOULD)
+
+
+
+Thomson & Turner        Expires December 15, 2017              [Page 26]
+
+Internet-Draft                QUIC over TLS                    June 2017
+
+
+# 8.3.  Address トークン完全性
+
+TLSは転送が何らかのやり方で完全性保護に資さないかぐり、
+アドレス検証トークンを提供しなくてはいけません(MUST )
+  再開用秘密鍵のような機密情報を含むNewSessionTicket のために、トークンが保護のオーバーヘッドの重複なく機密性と完全性保護の両方を与える認証付き暗号化の元においてトークンを含みます。
+
