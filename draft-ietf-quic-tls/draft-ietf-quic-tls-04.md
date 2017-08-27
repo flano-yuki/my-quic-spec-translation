@@ -96,14 +96,6 @@ Internet-Draft                QUIC over TLS                    June 2017
        7.1.1.  初期鍵遷移 . . . . . . . . . . . . . . .  21
        7.1.2.  再送と保護されないパケットの承認 Packets . . . . . . . . . . . . . . . . . . . . . . .  22
      7.2.  鍵の更新  . . . . . . . . . . . . . . . . . . . . . . .  23
-
-
-
-Thomson & Turner        Expires December 15, 2017               [Page 2]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
-
    8.  クライアントアドレス検証  . . . . . . . . . . . . . . . . . .  24
      8.1.  HelloRetryRequest アドレス検証   . . . . . . . . . .  24
        8.1.1.  Stateless アドレス検証  . . . . . . . . . . . .  25
@@ -198,12 +190,6 @@ QUICはTLSハンドシェイクを用い、TLSはQUICストリームから提供
 
 
 
-
-Thomson & Turner        Expires December 15, 2017               [Page 4]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
-
    +------------+                        +------------+
    |            |------ Handshake ------>|            |
    |            |<-- Validate Address ---|            |
@@ -252,10 +238,6 @@ TLSの認証された鍵交換は２つの実体、クライアントとサー�
 
 
 
-Thomson & Turner        Expires December 15, 2017               [Page 5]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 もし鍵交換が完全に成功すると、クライアントとサーバとの両方は
 秘密鍵を了承します。TLSは事前共有鍵（PSK)とデッフィーハフマン（DH)鍵交換の
@@ -303,10 +285,6 @@ TLS 1.3はQUICにとって興味深い２つの基本的なハンドシェイク
 
 
 
-Thomson & Turner        Expires December 15, 2017               [Page 6]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 この0-RTTハンドシェイクはクライアントとサーバが以前通信したときのみ可能です。
 1-RTTハンドシェイクにおいて、クライアントは保護されたアプリケーションデータを
@@ -350,10 +328,6 @@ QUICはこのストリームへの損失回復を行いまた、TLSハンドシ�
 正しい順序で配送されることを保証します。
 
 
-
-Thomson & Turner        Expires December 15, 2017               [Page 7]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
        Client                                             Server
@@ -401,10 +375,6 @@ Internet-Draft                QUIC over TLS                    June 2017
 保護に、TLSハンドシェイクメッセージの最後のパケットが送られる後に起こります。
 
 
-Thomson & Turner        Expires December 15, 2017               [Page 8]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 Note: クライアントはハンドシェイクの間に２つの異なった種類の平文パケットを用います。
 Client Initial パケットはTLS ClientHelloメッセージを運送します。TLSハンドシェイクの残りは
@@ -449,10 +419,6 @@ QUICクライアントはTLSからTLSハンドシェイクオクテットを始�
 
 
 
-
-Thomson & Turner        Expires December 15, 2017               [Page 9]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 QUICサーバはstream 0オクテットの提供のための処理を始めます。
 
@@ -511,10 +477,6 @@ TLS ClientHelloの処理の間、TLSは転送がクライアントからソー�
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 10]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 もしクライアントがセッション再開を試みないなら、
 トークンは存在しません。初期ClientHelloの処理の間、
 TLSはQUICに存在するなんらかのトークンを提供します。
@@ -563,10 +525,6 @@ TLSがハンドシェイクを完了したとき、1-RTT 鍵はQUICへ提供さ�
 実装はTLSハンドシェイクメッセージが暗号文パケットの中で送られることを保証しなければいけません(MUST)。
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 11]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 パケットの分割はデータに1-RTT 鍵に保護される必要を要求します。
 
@@ -619,10 +577,6 @@ QUICとTLSの間の交換を要約します。
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 12]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 # 4.3.  TLS バージョン
 
@@ -674,10 +628,6 @@ Internet-Draft                QUIC over TLS                    June 2017
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 13]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 
   サーバはクライアント認証をハンドシェイクの間に要求しても良いです(MAY)
@@ -727,11 +677,6 @@ AEAD関数の選択もまたTLSにより交渉された適切なAEADのために
 新しい鍵が導入されるたびにそれらのパケットのKEY_PHASEビットは、
 新たな鍵の複製の使用を通知するために反転されます。
 
-
-
-Thomson & Turner        Expires December 15, 2017              [Page 14]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
 新たなパケットにおいて、エンドポイントはストリームデータを再送します。
@@ -789,10 +734,6 @@ TLSから提供されます。
 暗号鍵のサイズはTLSにより交渉されたPRFハッシュ関数のためにハッシュ出力のサイズでなければいけません(MUST)
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 15]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
       client_pp_secret_0
@@ -900,10 +841,6 @@ TLSによって選ばれたAEADによって保護されます。
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 17]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 ナンスNはパケット保護IV(client_pp_iv_nかserver_pp_iv_nのどちらか)と
 パケットナンバーの結合によって構成されます。
 ネットワークバイトオーダーに再構築されたQUICパケットナンバーの64ビットは
@@ -950,10 +887,6 @@ TLSはstream 0において保持されたコネクションにレコード保護
 
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 18]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
 5.5.  保護されたパケットの受理
@@ -1013,10 +946,6 @@ QUICのこのバージョンに血合いs手、
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 19]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 送信者はそれからタイプフィールドから始まる与えられたパケットの
 完全性検査を計算します。
 そのハッシュの出力はパケットに追加されます。
@@ -1068,10 +997,6 @@ KEY_PHASEビットは変更を引き起こした最初のパケットを受信�
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 20]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 KEY_PHASEはQUICショートヘッダの0x20ビットとしても含まれ、また
 ロングヘッダからのパケットタイプによって決定される。
 TLSハンドシェイクメッセージを有効にするのに必要な複雑なハンドシェイクの間は
@@ -1114,10 +1039,6 @@ TLS EndOfEarlyDataと Finished メッセージを含むパケットは暗号文�
 これらのパケットのすべてはサーバにおいて非同期に到達します。
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 21]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 サーバはTLS ClientHelloの前に到達した0-RTTパケットを保持することを
 選んでも良いです。
@@ -1182,10 +1103,6 @@ ACKフレームを処理する必要があります(MUST)また、
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 22]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 
 使うことの出来るキーフェーズの数を制限するために、
@@ -1235,10 +1152,6 @@ KEY_PHASEビットにおける変化は使われる新しい鍵が使われる�
 鍵を廃棄するかもしれません。
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 23]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
 一度ハンドシェイクが完了したなら、同じKEY_PHASEを持つパケットは
@@ -1295,11 +1208,6 @@ TLS HelloRetryRequestメッセージにおけるクッキー拡張は
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 24]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
-
 QUICは最初のClientHelloの処理の間にアドレス検証を要求するとき、
 それが提供したトークンはHelloRetryRequestのクッキー拡張に含まれます。
 出来る限りクッキーはクライアントによって推測されることはできません。
@@ -1343,10 +1251,6 @@ TLSはアドレス検証に対するトランスポートプロトコルの調�
 再構築のために必要です。
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 25]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
 # 8.1.2.   HelloRetryRequestの送信
@@ -1400,10 +1304,6 @@ QUICは新しいアドレス検証トークンが提供されたことにより�
 アドレス検証トークンを提供するべきです(SHOULD)
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 26]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
 # 8.3.  Address トークン完全性
@@ -1713,10 +1613,6 @@ QUICパケット保護はパディングに対していかなる割当も含み�
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 33]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
    TLS_HANDSHAKE_FAILED (0xC000001C):  The TLS handshake failed.
 
@@ -1767,11 +1663,6 @@ Internet-Draft                QUIC over TLS                    June 2017
 
 
 
-
-
-Thomson & Turner        Expires December 15, 2017              [Page 34]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
@@ -1825,10 +1716,6 @@ Internet-Draft                QUIC over TLS                    June 2017
 
 
 
-Thomson & Turner        Expires December 15, 2017              [Page 35]
-
-Internet-Draft                QUIC over TLS                    June 2017
-
 
 Appendix A.  Contributors
 
@@ -1880,10 +1767,6 @@ C.2.  Since draft-ietf-quic-tls-01
 
 
 
-
-Thomson & Turner        Expires December 15, 2017              [Page 36]
-
-Internet-Draft                QUIC over TLS                    June 2017
 
 
 C.3.  Since draft-ietf-quic-tls-00
