@@ -156,7 +156,6 @@ TLS1.2に対しても同様の設計を行うことが出来ます。
 この文書は[QUIC-TRANSPORT]において確率した用語を用います。
 
 端的に述べるため、TLSの略語がTLS1.3への参照として用いられます。
-   For brevity, the acronym TLS is used to refer to TLS 1.3.
 
 TLSへの一部へ参照するとき、TLSの用語が用いられます。
 TLSがオクテットの連続するストリームを仮定するにもかかわらず、
@@ -894,11 +893,8 @@ TLSはstream 0において保持されたコネクションにレコード保護
 
 パケットが保護されてないことへの失敗は攻撃かもしれないピアーに
 プロトコルエラーの存在を示す必要は必ずしもありません。
-
-   Failure to unprotect a packet does not necessarily indicate the
-   existence of a protocol error in a peer or an attack.  The truncated
-   packet number encoding used in QUIC can cause packet numbers to be
-   decoded incorrectly if they are delayed significantly.
+QUICで用いられる切り詰められたパケットがナンバーエンコーディングは
+もしはっきりと遅延されたなら、パケットナンバーが不適切に復号されることがあります。
 
 # 5.6.  パケットナンバーギャップ
 
