@@ -469,14 +469,6 @@ TLS ClientHelloの処理の間、TLSは転送がクライアントからソー�
 セッションを再開する初期TLS ClientHello はセッションチケットに
 アドレス検証トークンを含みます。
 これを0-RTT におけるすべての試行を含みます。
-   During the processing of the TLS ClientHello, TLS requests that the
-   transport make a decision about whether to request source address
-   validation from the client.
-
-   An initial TLS ClientHello that resumes a session includes an address
-   validation token in the session ticket; this includes all attempts at
-
-
 
 もしクライアントがセッション再開を試みないなら、
 トークンは存在しません。初期ClientHelloの処理の間、
