@@ -358,7 +358,7 @@ QUICはこのストリームへの損失回復を行いまた、TLSハンドシ�
 
    @1 QUIC Frames <any>        <------->      QUIC Frames <any> @1
 
-                     Figure 3: QUIC over TLS Handshake
+                     図3: TLSハンドシェイクにおけるQUIC
 
    図3において, 記号は以下のように意味します :
 
