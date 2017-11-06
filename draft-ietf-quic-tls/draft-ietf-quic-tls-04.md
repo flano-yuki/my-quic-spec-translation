@@ -153,17 +153,18 @@ TLS1.2に対しても同様の設計を行うことが出来ます。
    document.  It's not shouting; when they are capitalized, they have
    the special meaning defined in [RFC2119].
 
-   This document uses the terminology established in [QUIC-TRANSPORT].
+この文書は[QUIC-TRANSPORT]において確率した用語を用います。
 
+端的に述べるため、TLSの略語がTLS1.3への参照として用いられます。
    For brevity, the acronym TLS is used to refer to TLS 1.3.
 
-   TLS terminology is used when referring to parts of TLS.  Though TLS
-   assumes a continuous stream of octets, it divides that stream into
-   _records_. Most relevant to QUIC are the records that contain TLS
-   _handshake messages_, which are discrete messages that are used for
-   key agreement, authentication and parameter negotiation.  Ordinarily,
-   TLS records can also contain _application data_, though in the QUIC
-   usage there is no use of TLS application data.
+TLSへの一部へ参照するとき、TLSの用語が用いられます。
+TLSがオクテットの連続するストリームを仮定するにもかかわらず、
+それはストリームをレコードに分割します。もっともQUICに関係するのは
+TLS ハンドシェイクメッセージを含むレコードです。
+それは鍵合意、認証、パラメータネゴシエーションのための離散的なメッセージです。
+一般的に、TLSレコードはアプリケーションデータを含むことが出来ます。
+にもかかわらず、QUICの仕様においてはTLSアプリケーションデータを用いることはありません。
 
 3.  プロトコル概略
 
