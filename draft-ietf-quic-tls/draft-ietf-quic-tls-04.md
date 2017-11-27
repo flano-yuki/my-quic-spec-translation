@@ -674,12 +674,7 @@ AEAD関数の選択もまたTLSにより交渉された適切なAEADのために
 新たなパケットにおいて、エンドポイントはストリームデータを再送します。
 新たなパケットは新たしいパケットナンバーをもち、また最新の
 パケット保護鍵を用います。
-この単純化された鍵管理は鍵が更新されたときのものです。
-
-   An endpoint retransmits stream data in a new packet.  New packets
-   have new packet numbers and use the latest packet protection keys.
-   This simplifies key management when there are key updates (see
-   Section 7.2).
+この単純化された鍵管理は鍵が更新されたときのものです。(7.2章を参照)
 
 # 5.2.  QUIC 鍵拡張
 
@@ -756,7 +751,6 @@ HKDF-Expand-LabelはTLSにより交渉されたPRFハッシュ関数を用いま
                               "", Hash.length)
 
 これは必要に応じて作られた新しい秘密鍵の継承を許可します。
-   This allows for a succession of new secrets to be created as needed.
 
 HKDF-Expand-Labelは以下のように特別にフォーマットされたパラメータとともに
 HKDF-Expand [RFC5869] を用います。
